@@ -20,7 +20,7 @@ func main() {
 	fmt.Scan(&taxRate)
 
 	ebt := revenue - expenses
-	profit := (revenue*(1-taxRate) - expenses)
+	profit := ebt * (1 - taxRate/100)
 	ratio := ebt / profit
 
 	fmt.Printf("EBT: %f\n", ebt)
