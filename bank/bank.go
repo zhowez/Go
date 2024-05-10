@@ -1,13 +1,26 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"strconv"
 )
+
+var accountBalFileName = "bal.txt"
 
 func main() {
 	var option int
-	var accountBalance = 1000.0
+
 	fmt.Println("Welcome to Go Bank!")
+
+	_, err := readBalFile()
+
+	if err != nil {
+		fmt.Println("There was an error in Main")
+		fmt.Println(err)
+		panic("Can't continue. Sorry")
+	}
 
 	for option != 4 {
 		printMenu()
@@ -16,13 +29,13 @@ func main() {
 
 		switch option {
 		case 1:
-			checkBalance(accountBalance)
+			checkBalance()
 
 		case 2:
-			depositMoney(&accountBalance)
+			depositMoney()
 
 		case 3:
-			withdrawlAmount(&accountBalance)
+			withdrawlAmount()
 
 		case 4:
 			fmt.Println("Thank you\nGoodbye")
@@ -45,12 +58,19 @@ func printMenu() {
 	fmt.Printf("Your choice: ")
 }
 
-func checkBalance(bal float64) {
+func checkBalance() {
+
+	bal, err := readBalFile()
+
+	if err != nil {
+		fmt.Println("There was an error in check balance")
+		fmt.Println(err)
+	}
 	fmt.Printf("Your balance is: $%.2f\n", bal)
 
 }
 
-func depositMoney(bal *float64) {
+func depositMoney() {
 	var deposit float64
 	fmt.Printf("How much would you like to deposit: ")
 	fmt.Scan(&deposit)
@@ -61,28 +81,67 @@ func depositMoney(bal *float64) {
 		return
 	}
 
-	*bal += deposit
+	bal, err := readBalFile()
+
+	if err != nil {
+		fmt.Println("There was an error in Deposit Money")
+		fmt.Println(err)
+	}
+
+	bal += deposit
 
 	fmt.Printf("You have deposited: $%.2f\n", deposit)
 
-	checkBalance(*bal)
+	writeBalToFile(bal)
+
+	checkBalance()
 }
 
-func withdrawlAmount(bal *float64) {
+func withdrawlAmount() {
 	var withdrawl float64
+	bal, err := readBalFile()
+
+	if err != nil {
+		fmt.Println("There was an error in withdrawl Money")
+		fmt.Println(err)
+	}
 	fmt.Printf("How much would you like to deposit: ")
 	fmt.Scan(&withdrawl)
 
-	if withdrawl <= 0 || withdrawl > *bal {
+	if withdrawl <= 0 || withdrawl > bal {
 		fmt.Println("The withdrawl amount must be greater than 0 or less than the balance")
 		fmt.Println("Returning to the Main Menu")
 		return
 	}
 
-	*bal -= withdrawl
+	bal -= withdrawl
 
 	fmt.Printf("You have withdrawn: $%.2f\n", withdrawl)
+	writeBalToFile(bal)
 
-	checkBalance(*bal)
+	checkBalance()
 
+}
+
+func writeBalToFile(bal float64) {
+	balText := fmt.Sprint(bal)
+	os.WriteFile(accountBalFileName, []byte(balText), 0644)
+}
+
+func readBalFile() (float64, error) {
+	data, err := os.ReadFile(accountBalFileName)
+
+	if err != nil {
+		writeBalToFile(1000.0)
+		return 1000, errors.New("Failed to find file. Created new one and deposited $1000")
+	}
+	balText := string(data)
+	bal, err := strconv.ParseFloat(balText, 64)
+
+	if err != nil {
+		writeBalToFile(1000.0)
+		return 1000, errors.New("Failed to read file. Created new one and deposited $1000")
+	}
+
+	return bal, nil
 }
