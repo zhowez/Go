@@ -9,7 +9,7 @@ import (
 
 const accountBalanceFile = "balance.txt"
 
-func getBalanceFromFile() (float64, error) {
+func getFloatFromFile() (float64, error) {
 	data, err := os.ReadFile(accountBalanceFile)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func writeBalanceToFile(balance float64) {
 }
 
 func main() {
-	var accountBalance, err = getBalanceFromFile()
+	var accountBalance, err = getFloatFromFile()
 
 	if err != nil {
 		fmt.Println("ERROR")
