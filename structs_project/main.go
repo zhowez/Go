@@ -62,7 +62,14 @@ func main() {
 
 	outputData(&userNote)
 
+	// printSomething(1)
+	// printSomething("test")
+
 }
+
+// func printSomething(value interface{}) {
+// 	fmt.Println(value)
+// }
 
 
 func outputData(data outputable) {
