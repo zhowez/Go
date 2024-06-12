@@ -55,6 +55,10 @@ func main() {
 
 	fmt.Print("Products: ", products, "\n")
 
+	products = append(products, product{"malk",2,27.69})
+
+	fmt.Print("Products: added ", products, "\n")
+
 
 
 }
