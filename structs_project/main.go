@@ -62,14 +62,26 @@ func main() {
 
 	outputData(&userNote)
 
-	// printSomething(1)
-	// printSomething("test")
+	printSomething(1)
+	printSomething(1.5)
+	printSomething("test")
+	printSomething(todo)
 
 }
 
-// func printSomething(value interface{}) {
-// 	fmt.Println(value)
-// }
+func printSomething(value interface{}) {
+	switch value.(type) {
+	case int: 
+		fmt.Println("Int")
+
+	case string: 
+		fmt.Println("string")
+
+	default: 
+		fmt.Println("other")
+	}
+	fmt.Println(value)
+}
 
 
 func outputData(data outputable) {

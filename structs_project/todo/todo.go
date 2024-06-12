@@ -25,7 +25,7 @@ func New(content string) (Todo, error ){
 }
 
 func (todo *Todo) Display () {
-	fmt.Println(todo)
+	fmt.Println(todo.Text)
 }
 
 func (todo Todo) Save() error {
