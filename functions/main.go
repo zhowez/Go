@@ -20,6 +20,8 @@ func main() {
 
 
 	fmt.Println(transformed)
+
+	fmt.Println(factorial(3))
 }
 
 func transformNumbers(numbers *[]int, transform func(int) int) []int {
@@ -37,4 +39,12 @@ func createTransformer(factor int)  func(int) int{
 	return func(number int) int {
 		return number * factor
 	}
+}
+
+func factorial (number int) int {
+	if (number == 0) {
+		return 1
+	}
+
+	return factorial(number - 1) * number  
 }
