@@ -16,13 +16,14 @@ type TaxIncludedPriceJob struct {
 }
 
 
-func (job *TaxIncludedPriceJob) Process() error{
+func (job *TaxIncludedPriceJob) Process(doneChan chan bool, errorChan chan error) {
 
 	err := job.LoadData()
 
 	if err != nil {
 		fmt.Println(err)
-		return err
+		errorChan <- err
+		return
 	}
 
 
@@ -37,7 +38,9 @@ func (job *TaxIncludedPriceJob) Process() error{
 
 	job.TaxIncludedPrices = result
 
-	return job.IOManager.WriteResult(job)
+	job.IOManager.WriteResult(job)
+	doneChan<-true
+
 }
 
 
